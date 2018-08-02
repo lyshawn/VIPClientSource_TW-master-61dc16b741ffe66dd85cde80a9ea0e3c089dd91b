@@ -1,0 +1,61 @@
+apply plugin: 'com.android.library'
+
+android {
+    compileSdkVersion 19
+    buildToolsVersion "26.0.2"
+    defaultConfig {
+        minSdkVersion 12
+        targetSdkVersion 19
+        versionCode 1
+        versionName "1.0"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+    repositories {
+        flatDir {
+            dirs 'libs'
+        }
+    }
+}
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    })
+//    compile 'com.android.support:appcompat-v7:26.+'
+//    compile 'com.android.support.constraint:constraint-layout:1.0.2'
+    testCompile 'junit:junit:4.12'
+}
+
+android.libraryVariants.all { variant ->
+    variant.outputs.each { output ->
+        def outputFile = output.outputFile
+        if (outputFile != null && outputFile.name.endsWith('.aar')) {
+            def fileName = "npplayvipsdkV1_0.0.5.aar"
+            output.outputFile = new File(outputFile.parent, fileName)
+        }
+    }
+}
+
+// 移除舊的 jar 檔
+task deleteOldJar(type: Delete) {
+    delete 'debug/npplayvipsdkV1_0.0.5.jar'
+    delete 'debug/AndroidPlugin.jar'
+}
+
+// 匯出 jar 檔
+task exportJar(type: Copy) {
+    from('build/intermediates/bundles/debug/')
+    into('debug/')
+    include('classes.jar')
+    // 將匯出的 jar 檔重新命名
+    rename('classes.jar', 'npplayvipsdkV1_0.0.6.jar')
+}
+
+exportJar.dependsOn(deleteOldJar, build)

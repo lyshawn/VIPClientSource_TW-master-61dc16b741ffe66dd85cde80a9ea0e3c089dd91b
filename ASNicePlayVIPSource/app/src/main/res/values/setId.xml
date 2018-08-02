@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="nextPageBtn" type="id"></item>
+    <item name="progressBar" type="id"></item>
+    <item name="phoneBtn" type="id"></item>
+    <item name="giftFrameLayout" type="id"></item>
+
+</resources>
